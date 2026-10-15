@@ -1,0 +1,38 @@
+{
+  "schema": "mcp-tool-surface/v1",
+  "server": "lex-ops-mcp",
+  "entry_path": "/lex-ops-mcp",
+  "product_line": "lex",
+  "hosting": ["shared-instance"],
+  "description": "识律（lex 线）操作 MCP：线全景导览（self-describing）、账户视图（身份/用量/账单/配额）、检索凭据生命周期（列表/铸造/吊销）。进站 Bearer 原样转发——console 鉴权与 owner-only 全由 fd-lex 判定；mint 明文仅走一次。",
+  "skills_eligible_for_packs": [
+    "lex-surface-orientation"
+  ],
+  "tool_groups": [
+    {
+      "group": "account",
+      "level": "commercial",
+      "tools": [
+        "lex_surface_overview",
+        "lex_me",
+        "lex_usage",
+        "lex_billing",
+        "lex_quota",
+        "lex_credentials_list"
+      ],
+      "data_sources": [
+        "fd-lex console API /api/console/*（识律控制台同源）"
+      ],
+      "notes": "只读视图+导览；组织门禁（lex-customers）上游判定。"
+    },
+    {
+      "group": "credentials",
+      "level": "internal",
+      "tools": [
+        "lex_credential_mint",
+        "lex_credential_revoke"
+      ],
+      "notes": "凭据生命周期不进 pack 商业面（owner-only+明文一次性）；promote_when：出现可信的代管凭据场景再评。"
+    }
+  ]
+}
