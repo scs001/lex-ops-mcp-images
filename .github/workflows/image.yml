@@ -20,7 +20,28 @@ env:
   DOCKERFILE: Dockerfile
 
 jobs:
+  # 测试先跑：凭据生命周期（mint 仅一次、revoke 幂等）与 Bearer 原样转发是
+  # 核心不变量，测试不过不应出片。必须装 [dev]：只装 . 时 pytest-asyncio 缺失，
+  # 16 个异步用例会全部报 "async def functions are not natively supported"。
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Test suite
+        run: python -m pytest tests/ -q
+
   build-push:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
